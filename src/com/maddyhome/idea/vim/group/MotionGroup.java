@@ -273,7 +273,7 @@ public class MotionGroup {
 
     MotionGroup.moveCaret(editor, editor.getCaretModel().getPrimaryCaret(), start);
     toggleVisual(editor, 1, 0, mode);
-    MotionGroup.moveCaret(editor, editor.getCaretModel().getPrimaryCaret(), end);
+    MotionGroup.moveCaret(editor, editor.getCaretModel().getPrimaryCaret(), end, true);
     KeyHandler.getInstance().reset(editor);
   }
 
@@ -1510,6 +1510,12 @@ public class MotionGroup {
       exitVisual(editor);
     }
     else {
+      while (CommandState.getInstance(editor).getSubMode() != CommandState.SubMode.NONE
+              || CommandState.getInstance(editor).getMode() != CommandState.Mode.COMMAND) {
+        CommandState.getInstance(editor).popState();
+      }
+      ChangeGroup.resetCursor(editor, false);
+
       CommandState.getInstance(editor).pushState(CommandState.Mode.VISUAL, mode, MappingMode.VISUAL);
     }
 
@@ -1554,6 +1560,12 @@ public class MotionGroup {
         MotionGroup.moveCaret(editor, primaryCaret, CaretData.getVisualEnd(primaryCaret), true);
       }
       else {
+        while (CommandState.getInstance(editor).getSubMode() != CommandState.SubMode.NONE
+                || CommandState.getInstance(editor).getMode() != CommandState.Mode.COMMAND) {
+          CommandState.getInstance(editor).popState();
+        }
+        ChangeGroup.resetCursor(editor, false);
+
         CommandState.getInstance(editor).pushState(CommandState.Mode.VISUAL, mode, MappingMode.VISUAL);
         if (mode == CommandState.SubMode.VISUAL_BLOCK) {
           EditorData.setVisualBlockStart(editor, editor.getSelectionModel().getSelectionStart());

@@ -1788,7 +1788,7 @@ public class ChangeGroup {
     return true;
   }
 
-  private static void resetCursor(@NotNull Editor editor, boolean insert) {
+  public static void resetCursor(@NotNull Editor editor, boolean insert) {
     Document doc = editor.getDocument();
     VirtualFile vf = FileDocumentManager.getInstance().getFile(doc);
     if (vf != null) {
